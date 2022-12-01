@@ -436,8 +436,31 @@ function toNaryString(num, n) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const arr = [...pathes];
+  arr.sort((a, b) => a.length - b.length);
+  let str = arr[0];
+  let number = 0;
+  for (let i = 1; i < arr.length; i += 1) {
+    for (let j = 0; j < str.length; j += 1) {
+      if (arr[i][j] !== str[j]) {
+        number = j;
+        break;
+      }
+    }
+  }
+  if (number === 0) {
+    return '';
+  }
+  str = str.slice(0, number + 1);
+  const strArr = str.split('');
+  for (let j = strArr.length - 1; j > 0; j -= 1) {
+    if (strArr[j] === '/') {
+      break;
+    }
+    strArr.pop();
+  }
+  return strArr.join('');
 }
 
 
@@ -504,8 +527,38 @@ function getMatrixProduct(m1, m2) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const win = [
+    [[0, 0], [0, 1], [0, 2]],
+    [[1, 0], [1, 1], [1, 2]],
+    [[2, 0], [2, 1], [2, 2]],
+    [[0, 0], [1, 0], [2, 0]],
+    [[0, 1], [1, 1], [2, 1]],
+    [[0, 2], [1, 2], [2, 2]],
+    [[0, 0], [1, 1], [2, 2]],
+    [[0, 2], [1, 1], [2, 0]],
+  ];
+  const arr0 = [];
+  const arrX = [];
+  for (let i = 0; i < position.length; i += 1) {
+    for (let j = 0; j < position[i].length; j += 1) {
+      if (position[i][j] === '0') {
+        arr0.push([i, j]);
+      }
+      if (position[i][j] === 'X') {
+        arrX.push([i, j]);
+      }
+    }
+  }
+  for (let i = 0; i < win.length; i += 1) {
+    if (win[i].reduce((a, b) => a && JSON.stringify(arrX).includes(JSON.stringify(b)), true)) {
+      return 'X';
+    }
+    if (win[i].reduce((a, b) => a && JSON.stringify(arr0).includes(JSON.stringify(b)), true)) {
+      return '0';
+    }
+  }
+  return undefined;
 }
 
 
